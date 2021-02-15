@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <!-- Page Content -->
+<div class="container">
+
+  <!-- Page Heading -->
+  <h1 class="my-4">List of org:
+    <small>click on any one of them</small>
+  </h1><hr>
+
+  <div class="row">
+{%for i in org%}
+    <div class="col-lg-4 col-sm-6 mb-4">
+      <div class="card h-100" style="border:2px black solid">
+        <a href="/sentiment/products/{{i.id}}"><img style='height:150px' class="card-img-top" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Tata_logo.svg/1200px-Tata_logo.svg.png" alt=""></a>
+        <div class="card-body" style='background-color:lightgreen;'>
+          <h4 class="card-title" style="color:white">
+            <a href="/sentiment/products/{{i.id}}"><b>{{i.name}}</b></a>
+          </h4>
+          <p class="card-text"></p>
+        </div>
+      </div>
+    </div>
+    {%endfor%}
+
+    </div>
+
+
+</div>
+  </body>
+</html>

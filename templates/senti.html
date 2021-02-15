@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+{%extends 'dashboard.html'%}
+{%block content%}
+<style>
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+
+/* Add Zoom Animation */
+.animate {
+  -webkit-animation: animatezoom 0.6s;
+  animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)}
+  to {-webkit-transform: scale(1)}
+}
+
+@keyframes animatezoom {
+  from {transform: scale(0)}
+  to {transform: scale(1)}
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+  span.psw {
+     display: block;
+     float: none;
+  }
+  .cancelbtn {
+     width: 100%;
+  }
+}
+
+{%block content1%}
+body {
+    background-color: #eee
+}
+
+.btn-sm {
+    width: 100px
+}
+
+.card {
+    width: 90%;
+    background-color: #fff;
+
+
+}
+{%endblock%}
+</style>
+<head>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css'>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script>
+window.onload = function() {
+
+  var chart = new CanvasJS.Chart("chartContainer", {
+  	animationEnabled: true,
+  	title:{
+  		text: "sentiment in reviews",
+  		horizontalAlign: "left"
+  	},
+  	data: [{
+  		type: "doughnut",
+  		startAngle: 60,
+  		//innerRadius: 60,
+  		indexLabelFontSize: 17,
+  		indexLabel: "{label} - #percent%",
+  		toolTipContent: "<b>{label}:</b> {y} (#percent%)",
+  		dataPoints: [
+
+        {%for i,j in review.items%}
+  			{ y: {{j}}, label: "{{i}}" },
+  			{%endfor%}
+
+  		]
+  	}]
+  });
+  chart.render();
+
+
+
+var chart1 = new CanvasJS.Chart("chartContainer1", {
+	animationEnabled: true,
+	theme: "light2", // "light1", "light2", "dark1", "dark2"
+	title:{
+		text: "Video calls sentiment"
+	},
+	axisY: {
+		title: "percentage"
+	},
+	data: [{
+		type: "column",
+		showInLegend: true,
+		legendMarkerColor: "grey",
+		legendText: "In percentage",
+		dataPoints: [
+      {%for i,j in video.items%}
+			{ y: {{j}}, label: "{{i}}" },
+      {%endfor%}
+
+		]
+	}]
+});
+chart1.render();
+
+var chart2 = new CanvasJS.Chart("chartContainer3", {
+	theme: "light2", // "light1", "light2", "dark1", "dark2"
+	exportEnabled: true,
+	animationEnabled: true,
+	title: {
+		text: "Audio calls sentiment"
+	},
+	data: [{
+		type: "pie",
+		startAngle: 25,
+		toolTipContent: "<b>{label}</b>: {y}%",
+		showInLegend: "true",
+		legendText: "{label}",
+		indexLabelFontSize: 16,
+		indexLabel: "{label} - {y}%",
+		dataPoints: [
+      {%for i,j in audio_review.items%}
+			{ y: {{j}}, label: "{{i}}" },
+      {%endfor%}
+
+		]
+	}]
+});
+chart2.render();
+
+}
+</script>
+</head>
+<div class="w3-sidebar w3-light-blue w3-bar-block" style="width:20%">
+  <h3 class="w3-bar-item">{{name}}&nbsp:&nbsp Products</h3><hr>
+  {%for i in products%}
+  <a href="{{i.id}}" class="w3-bar-item w3-button" style="text-decoration:none">{{i.name}}</a><hr>
+  {%endfor%}
+
+</div>
+<div style="margin-left:20%">
+  <h1>&nbsp&nbspText review details:</h1>
+<script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js'></script>
+<div class="container d-flex justify-content-center mt-5 mb-5">
+
+  <div class="card p-2 mb-2" data-aos="fade-right" style="border:2px black solid">
+    <h2><b>Customer review sentiment:</b></h2><hr style="height:5px">
+    <p>total number of reviews&nbsp:&nbsp{{review_count}}</p>
+    <p>total number of postive reviews&nbsp:&nbsp{{pos_review_count}}</p>
+    <p>total number of negetive reviews&nbsp:&nbsp{{neg_review_count}}<hr>
+    <p>top positive review&nbsp:&nbsp</p><p>===>&nbsp&nbsp{{top_review}}</p>
+    <p>top negetive review&nbsp:&nbsp</p><p>===>&nbsp&nbsp{{bad_review}}</p>
+  </div>
+        <div class="card p-2 mb-2" data-aos="fade-right" style="border:2px black solid">
+          <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+          <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+        </div>
+
+</div>
+<h1>&nbsp&nbspVideo review details:</h1>
+<div class="container d-flex justify-content-center mt-5 mb-5">
+  <div class="card p-2 mb-2" data-aos="fade-right" style="border:2px black solid">
+    <h2><b>Video review sentiment:</b></h2><hr style="height:5px">
+    <p>total number of video calls&nbsp:&nbsp{{video_count}}</p>
+    <p>total number of happy frames&nbsp:&nbsp{{happy}}</p>
+    <p>total number of sad frames&nbsp:&nbsp{{sad}}</p>
+
+      <p>total number of neutral frames&nbsp:&nbsp{{neutral}}</p>
+      <p>total number of angry frames&nbsp:&nbsp{{angry}}</p>
+
+
+  </div>
+
+<div class="card p-2 mb-2" data-aos="fade-right" style="border:2px black solid">
+<div id="chartContainer1" style="height: 370px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</div>
+</div>
+<h1>&nbsp&nbspAudio review details:</h1>
+<div class="container d-flex justify-content-center mt-5 mb-5">
+
+  <div class="card p-2 mb-2" data-aos="fade-right" style="border:2px black solid">
+    <h2><b>Audio review sentiment:</b></h2><hr style="height:5px">
+    <p>total number of reviews&nbsp:&nbsp{{audio_review_count}}</p>
+    <p>total number of postive reviews&nbsp:&nbsp{{audio_pos_review_count}}</p>
+    <p>total number of negetive reviews&nbsp:&nbsp{{audio_neg_review_count}}<hr>
+    <p>top positive review&nbsp:&nbsp</p><p>===>&nbsp&nbsp{{audio_top_review}}</p>
+    <p>top negetive review&nbsp:&nbsp</p><p>===>&nbsp&nbsp{{audio_bad_review}}</p>
+  </div>
+        <div class="card p-2 mb-2" data-aos="fade-right" style="border:2px black solid">
+          <div id="chartContainer3" style="height: 370px; width: 100%;"></div>
+          <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+        </div>
+
+</div>
+<hr>
+
+<a href="/sentiment/smedia/{{pk}}"><button type="button" name="button">See twitter sentiment</button></a><hr>
+
+</div>
+
+
+
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init();
+</script>
+{%endblock%}
